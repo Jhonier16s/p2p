@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/Offers.css";
 import { Link } from "react-router-dom";
 
-const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id  }) => {
+const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id, pricetrade, buy_sell  }) => {
   
   
 
@@ -15,7 +15,7 @@ const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id  }) => {
             <h2>Coin: {coin}</h2>
             <h2>Divisa: {currency}</h2>
             <div className="Card-top-info">
-              <h3>$35.177,46</h3>
+              <h3>$ {pricetrade}</h3>
               <p>4.1% por debajo del mercado</p>
             </div>
           </div>
@@ -24,7 +24,7 @@ const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id  }) => {
             <h3>ID Trade: {id}</h3>
             <h3>{city}</h3>
             <h3>$1K a 25k</h3>
-            <Link to={"/BuyConfirm/"+id}>
+            <Link to={buy_sell+id}>
               <button className="Offers-button">{option}</button>
             </Link>
           </div>

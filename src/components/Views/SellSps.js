@@ -32,6 +32,8 @@ const SellSps = () => {
             currency={trade.currency}
             city={trade.city}
             id={trade.id}
+            pricetrade={trade.pricetrade}
+            buy_sell="/sellConfirm/"
           />
         );
       })}

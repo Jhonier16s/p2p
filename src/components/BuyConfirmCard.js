@@ -1,9 +1,7 @@
 import React from "react";
 import "../styles/BuyConfirmCard.css";
+
 const BuyConfirmCard = ({buy_sell}) => {
-
-
-
 
   return (
     <>
@@ -64,7 +62,7 @@ const BuyConfirmCard = ({buy_sell}) => {
           </h2>
           <div>
             <button className="BuyConfirm-btn">
-              Tranferido, notificar al vendedor
+              Completar
             </button>
             <button className="BuyConfirm-btn-cancel">Cancelar orden</button>
           </div>

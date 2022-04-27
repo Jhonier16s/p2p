@@ -39,7 +39,7 @@ const Table = ({id, coin}) => {
                 <td>{history.id}</td>
                 <td>{history.typetrade}</td>
                 <td>{history.coin}</td>
-                <td>Na</td>
+                <td>{history.pricetrade}</td>
                 <td>Na</td>
               </tr>
             );
