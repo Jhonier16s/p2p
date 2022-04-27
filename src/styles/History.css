@@ -1,0 +1,23 @@
+.History-Main-Container{
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: #fff;
+    font-weight: 900;
+    font-size: large;
+}
+.History-Container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.History-Tittle{
+    display: flex;
+    justify-content: center;
+}
+.History-Table-Container{
+    display: flex;
+    justify-content: center;
+}

@@ -1,7 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
 .App {
-  text-align: center;
+  text-align: start;
+  font-family: 'Poppins', sans-serif;
+  color: azure;
+  padding-left: 15px;
 }
 
+.main-container{
+  background-color: #282c34;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,3 +43,4 @@
     transform: rotate(360deg);
   }
 }
+

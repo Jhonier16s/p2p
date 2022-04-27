@@ -1,0 +1,27 @@
+.Lists-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.Lists-info{
+    margin-top: 10px;
+    margin-left: 10px;
+    width: 70%;
+}
+.Lists-code{
+   margin: 0px;
+}
+.Lists-bar{
+    margin: 0px 0px;
+}
+.Lists-container-progressBar{
+    width: 100%;
+    background-color: #D8BAE5;
+    border-radius: 6px;
+}
+.Lists-progressBar{
+   background: #8E6AA0;
+   width: 70%;
+   height: 10px;
+   border-radius: 2px;
+}

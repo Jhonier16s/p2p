@@ -1,0 +1,28 @@
+.Table-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.Table-Main{
+    background-color: #fff;
+    width: 80%;
+    border-collapse: collapse ;
+    border-radius: 20px;
+    color: black;
+   
+}
+.Table-Head{
+    background-color: #FFB300;
+    height: 70px;
+    border-collapse: collapse;
+    color: #fff;
+}
+td
+    {
+      border:2px solid #000;
+      padding: 4px 4px;
+    }
+
+
+

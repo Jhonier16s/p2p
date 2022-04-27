@@ -1,0 +1,17 @@
+.Card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 50%;
+  height: 50%;
+  padding: 0px;
+}
+.Card-p {
+  font-size: 12px;
+}
+.Card-date {
+  margin: 0px;
+}
+.Card-code {
+  margin: 0px;
+}

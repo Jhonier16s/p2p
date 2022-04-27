@@ -1,0 +1,140 @@
+.BuyOffers-Main-Container {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-left: 20px;
+}
+.Form-Container {
+  display: flex;
+  flex-direction: column;
+}
+.Form-Input-Container {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 20px;
+  width: 40%;
+}
+.Form-Input{
+    margin: 2px 0px;
+    height: 20px;
+    border-radius: 6px;
+    border: none;
+    padding: 4px 4PX;
+    font-weight: 700;
+}
+.Form-Select{
+    margin: 2px 0px;
+    width: 185px;
+    height: 35px;
+    border-radius: 6px;
+    border: none;
+    padding: 4px 4PX;
+    font-weight: 700;
+}
+.Form-btn{
+    width: 10%;
+    margin: 20px 160px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 6px;
+    background-color: #FFB300;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+.Form-btn:hover{
+    background-color: #d49603;
+}
+/* .BuyOffers-Container{
+ display: flex;
+ justify-content: space-between;
+ flex-direction: row;
+}
+.BuyOffers-Left{
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.BuyOffers-Right{
+    margin-right: 20px;
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.BuyOffers-Label{
+   margin-right: 25px;
+   font-size: medium;
+   font-weight: 400;
+}
+.BuyOffers-Select{
+    padding: 10px 10px;
+    width: 50%;
+    border-radius: 10px;
+    font-size: medium;
+    font-weight: 600;
+    margin: 10px 0px;
+}
+.Coin-Info-Tittle{
+    margin-top: 60px;
+    color: #FFB300;
+}
+.BuyOffers-Info-Select{
+    padding: 15px 10px;
+    width: 30%;
+    border-radius: 10px;
+    font-size: medium;
+    font-weight: 600;
+    margin-left: 2px;
+    
+}
+.BuyOffers-Day{
+    margin: 0px 5px;
+}
+.BuyOffers-Right-Day{
+    margin-right: 20px;
+    width: 465px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.Terminos-Container{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+.Terminos-Label{
+    margin-right: 40px;
+}
+.Terminos-Textarea{
+    margin-left: 40px;
+    width: 350px;
+    height: 150px;
+    border-radius: 10px;
+}
+.Btn-Container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 25px 0px;
+}
+.BuyOffers-btn{
+    background-color: #FFB300;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size:24px;
+    font-weight: 900;
+    cursor: pointer;
+}
+.BuyOffers-btn:hover{
+    background-color: #d4980b;
+}
+ */

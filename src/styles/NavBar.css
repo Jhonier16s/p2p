@@ -1,0 +1,27 @@
+.NavBar-Main-container{
+    background-color: #512c3e28;
+    display: flex;
+    justify-content: center;
+}
+.NavBar-container{
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    list-style-type: none;
+    font-weight: 200;
+    font-size: 1rem;
+}
+.NavBar-item{
+    color: #fff;
+    text-decoration: none;
+}
+.active{
+    padding: 8px 8px;
+    background-color: #FFB300;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 10px;
+}

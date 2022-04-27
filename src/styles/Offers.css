@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+.Main-offers-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    
+}
+
+.Offers-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    background: #ffffff;
+    width: 90%;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.Card-top{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    color: #4F1068; 
+}
+.Card-top-info{
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+}
+
+
+.Card-bottom{
+    flex-direction: row;
+    color: #fff;
+    display: flex;
+    justify-content: space-around ;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    color: #000;
+    
+}
+.Offers-button{
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 24px;
+        color: #ffffff;
+        background-color: #4F1068;
+        border-radius: 20px;
+        border:none;
+        width: 150px;
+        height: 60px;
+}
+.Offers-button:hover{
+    color: #fff;
+    background-color: #69158a
+}

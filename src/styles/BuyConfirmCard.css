@@ -1,0 +1,83 @@
+.BuyConfirm-Tittle{
+    color: #fff;
+    margin: 0px 0px;
+    margin-top: 10px;
+}
+.BuyConfirm-Order{
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+}
+.BuyConfirm-Order-Tittle{
+    margin: 0px 5px;
+}
+.BuyConfirmCard-container{
+    background-color: #E6E6E8;
+    font-size: 10PX;
+    padding: 10PX 20PX;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+.BuyConfirm-Info-Container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.BuyConfirm-M{
+    color: #13A83D;
+}
+.BuyConfirm-Info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 125%;
+   
+}
+.BuyConfirm-Transfer-Info-Container{
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+}
+.BuyConfirm-Separator{
+    height: 178px;
+    width: 1.5px;
+    background-color: black;
+    margin-top: 18px;
+    margin-right: 5px;
+}
+.BuyConfirm-Transfer-Info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    
+}
+.BuyConfirm-Info-R{
+    display: flex;
+    flex-direction: row;
+}
+.BuyConfirm-btn{
+    background-color: #FFB300;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    color: #fff;
+    padding: 10px 10px;
+    border-radius: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.BuyConfirm-btn:hover{
+    background-color: #e7a406;
+}
+.BuyConfirm-btn-cancel{
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    color: #FFB300;
+    padding: 10px 10px;
+    border-radius: 10px;
+}
+.BuyConfirm-btn-cancel:hover{
+    background-color: #dddddd;
+}
