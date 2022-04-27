@@ -1,15 +1,13 @@
-import React from "react";
+import react from "react";
 import "../../styles/BuyConfirm.css";
 import BuyConfirmCard from "../BuyConfirmCard";
 import arrow from "../../assets/right-arrow.png";
-const BuyConfirm = ({id}) => {
-
-  
+const BuyConfirm = () => {
   return (
     <>
       <div className="Buy-Confirm-Container">
         <div className="Buy-Confirm-CARD-Container">
-          <BuyConfirmCard />
+          <BuyConfirmCard buy_sell={"Comprar"} />
         </div>
         <div className="Buy-Confirm-Steps-Container">
           <h3>Pasos para que se apruebe la compra</h3>
@@ -23,7 +21,7 @@ const BuyConfirm = ({id}) => {
           <div className="Buy-Confirm-User-Container">
             <div className="Buy-Confirm-User">
               <div className="Buy-Confirm-User-Ico">
-                <h1>{id}</h1>
+                <h1>R</h1>
               </div>
               <div>
                 <h2 className="Buy-Confirm-UserName">Ramiro1504</h2>
@@ -52,8 +50,12 @@ const BuyConfirm = ({id}) => {
               </div>
               <div className="Buy-Confirm-Text3">
                 <div className="Buy-Confirm-Input-Container">
-                  <input className="Buy-Confirm-Input" type="text" placeholder="Escriba un mensaje"/>
-                  <img className="Buy-Confirm-Send" src={arrow}alt=""/>
+                  <input
+                    className="Buy-Confirm-Input"
+                    type="text"
+                    placeholder="Escriba un mensaje"
+                  />
+                  <img className="Buy-Confirm-Send" src={arrow} alt="" />
                 </div>
               </div>
             </div>

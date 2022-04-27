@@ -24,7 +24,7 @@ const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id  }) => {
             <h3>ID Trade: {id}</h3>
             <h3>{city}</h3>
             <h3>$1K a 25k</h3>
-            <Link to={"/BuyConfirm"}>
+            <Link to={"/BuyConfirm/"+id}>
               <button className="Offers-button">{option}</button>
             </Link>
           </div>
