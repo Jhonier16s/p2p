@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import "../styles/BuyConfirmCard.css";
-import Offers from "./Offers";
-const BuyConfirmCard = () => {
+const BuyConfirmCard = ({buy_sell}) => {
+
+
 
 
   return (
     <>
-      <h1 className="BuyConfirm-Tittle">Comprar SPS a Ramiro1502</h1>
+      <h1 className="BuyConfirm-Tittle">{buy_sell} SPS a Ramiro1502</h1>
       <div className="BuyConfirm-Order">
         <h4 className="BuyConfirm-Order-Tittle" >Número de orden</h4>
         <h4 className="BuyConfirm-Order-Tittle">48563174589354</h4>

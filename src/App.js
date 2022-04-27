@@ -11,6 +11,23 @@ import BuyOffers from "./components/Views/BuyOffers";
 import SellOffers from "./components/Views/SellOffers";
 import BuyConfirm from "./components/Views/BuyConfirm";
 function App() {
+
+   const URL = "https://sps-p2p.herokuapp.com/trades.json";
+
+  const [trades, setTrades] = useState([]);
+  useEffect(() => {
+    getTrades();
+  }, []);
+
+  function getTrades() {
+    fetch(URL)
+      .then((res) => res.json())
+      .then((response) => {
+        const data = response;
+        console.log(response);
+        setTrades(data);
+      });
+  } 
   
   return (
     <>
@@ -26,6 +43,7 @@ function App() {
           <Route path="/BuyOffers" element={<BuyOffers />} />
           <Route path="/SellOffers" element={<SellOffers />} />
           <Route path={"/BuyConfirm"} element={<BuyConfirm/>} />
+          <Route path={"/BuyConfirm/:id"} element={<BuyConfirm/>} />
          
         </Routes>
       </BrowserRouter>
