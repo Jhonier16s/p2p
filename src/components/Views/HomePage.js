@@ -6,11 +6,6 @@ import dollar from "../../assets/dollar.png";
 import percent from "../../assets/percent.png";
 
 const HomePage = () => {
-
-  verifyMetamask();
-  getAccount();
-  changeNetwork();
-
   return (
     <>
       <HomePageCard img1={user} name1="Perfil" name2="Historial" img2={money} link1="/Profile" link2="/History"/>
@@ -19,41 +14,5 @@ const HomePage = () => {
     </>
   );
 };
-
-async function verifyMetamask(){
-  if (typeof window.ethereum !== 'undefined') {
-    console.log('MetaMask is installed!');
-  }
-  else{
-    console.log('MetaMask not installed!');
-  }
-}
-
-async function getAccount(){
-  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-  const account = accounts[0];
-  console.log(account);
-}
-
-async function changeNetwork(){
-  if(window.ethereum.networkVersion !== '56'){ // 56 es la default para Binance
-    await window.ethereum.request({
-      method: "wallet_addEthereumChain",
-      params: [{
-          chainId: "0x38",
-          rpcUrls: ["https://bsc-dataseed.binance.org/"],
-          chainName: "Smart Chain",
-          nativeCurrency: {
-              name: "Sparklife SPS",
-              symbol: "SPS",
-              decimals: 18
-          },
-          blockExplorerUrls: ["https://bscscan.com"]
-      }]
-    });
-  }
-}
-
-
 
 export default HomePage;
