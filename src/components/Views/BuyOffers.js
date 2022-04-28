@@ -16,21 +16,21 @@ const BuyOffers = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = 
-      { 
-          typetrade,
-          coin,
-          city,
-          country_id,
-          currency,
-          user_first,
-          user_second,
-          payment_method_id,
-          extra_info_payment,
-          status_trade,
-          pricetrade
-      };
+    { 
+      typetrade,
+      coin,
+      city,
+      country_id,
+      currency,
+      user_first,
+      user_second,
+      payment_method_id,
+      extra_info_payment,
+      status_trade,
+      pricetrade
+    };
     
-
+    
     fetch("https://sps-p2p.herokuapp.com/trades.json", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -38,10 +38,15 @@ const BuyOffers = () => {
     }).then(() => {
       console.log("success");
     });
-    console.log(data);
-    console.log(JSON.stringify(data));
+    /* console.log(data);
+    console.log(JSON.stringify(data)); */
+    
+    window.alert("Se ha completado la oferta, puedes verificarla en la pantalla de ofertas de compra"); 
+    e.target.reset();
+    
+    
   };
-
+  
   return (
     <>
       <div className="BuyOffers-Main-Container">

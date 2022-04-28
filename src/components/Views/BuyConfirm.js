@@ -1,13 +1,34 @@
-import react from "react";
+import react, { useEffect, useState } from "react";
 import "../../styles/BuyConfirm.css";
 import BuyConfirmCard from "../BuyConfirmCard";
 import arrow from "../../assets/right-arrow.png";
+import { useParams } from "react-router-dom";
+
 const BuyConfirm = () => {
+  /*  console.log(useParams()); */
+  const { id } = useParams();
+  /* console.log(id); */
+
+  const [getId, setId] = useState(id);
+  const [getTrade, setTrade] = useState({});
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const data = await fetch(`https://sps-p2p.herokuapp.com/trades/${id}.json`);
+    const trades = await data.json();
+    setTrade(trades);
+    setId(trades.id);
+    console.log(trades);
+  };
+
   return (
     <>
       <div className="Buy-Confirm-Container">
         <div className="Buy-Confirm-CARD-Container">
-          <BuyConfirmCard buy_sell={"Comprar"} />
+          <BuyConfirmCard back_to="/BuySps" complete="Confirmar transacción"idTrade={getTrade.id} date={getTrade.created_at} buy_sell={"Comprar"} one_pridetrade={getTrade.pricetrade} trade_extra_info_payment={getTrade.extra_info_payment} />
         </div>
         <div className="Buy-Confirm-Steps-Container">
           <h3>Pasos para que se apruebe la compra</h3>

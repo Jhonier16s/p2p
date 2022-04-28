@@ -25,7 +25,7 @@ function App() {
       .then((res) => res.json())
       .then((response) => {
         const data = response;
-        console.log(response);
+        /* console.log(response); */
         setTrades(data);
       });
   } 

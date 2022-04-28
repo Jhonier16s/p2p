@@ -29,7 +29,7 @@ const Table = ({id, coin}) => {
               <th>Tipo</th>
               <th>Billetera</th>
               <th>Cantidad</th>
-              <th>Tarifa</th>
+              <th>Estado</th>
             </tr>
           </thead>
           {history.map((history, index) => {
@@ -39,8 +39,8 @@ const Table = ({id, coin}) => {
                 <td>{history.id}</td>
                 <td>{history.typetrade}</td>
                 <td>{history.coin}</td>
-                <td>{history.pricetrade}</td>
-                <td>Na</td>
+                <td>{history.pricetrade} $ </td>
+                <td>{history.status_trade}</td>
               </tr>
             );
           })}
