@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/NavBar.css";
 import logo from "../assets/logosparlife.png"
-
+import Web3 from 'web3'
 
 const NavBar = () => {
 
@@ -45,14 +45,20 @@ const NavBar = () => {
 async function callMetamask(){
   if (typeof window.ethereum !== 'undefined') {
     //console.log('MetaMask is installed!');
+    web3SetUp();
     getAccount();
-    if(window.ethereum.networkVersion !== '56'){ // 56 es la default para Binance
+    if(window.ethereum.networkVersion !== '97'){ // 56 es la default para Binance
       changeNetwork();
     }
   }
   else{
+    window.web3 = null;
     alert('Necesitas instalar MetaMask');
   }
+}
+
+function web3SetUp() {
+  window.web3 = new Web3(window.web3.currentProvider);
 }
 
 async function getAccount(){
@@ -66,15 +72,15 @@ async function changeNetwork(){
   await window.ethereum.request({
     method: "wallet_addEthereumChain",
     params: [{
-      chainId: "0x38",
-      rpcUrls: ["https://bsc-dataseed.binance.org/"],
-      chainName: "Smart Chain",
+      chainId: "0x61", // 97 - 0x38 = 56
+      rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"], // https://bsc-dataseed.binance.org/
+      chainName: "BNB Test Smart Chain",
       nativeCurrency: {
         name: "Sparklife SPS",
         symbol: "SPS",
         decimals: 18
       },
-      blockExplorerUrls: ["https://bscscan.com"]
+      blockExplorerUrls: ["https://testnet.bscscan.com"]
     }]
   });
 }

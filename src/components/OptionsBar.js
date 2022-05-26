@@ -32,9 +32,9 @@ const OptionsBar = ({tittleBar}) => {
               name="coin"
               form="coinForm"
             >
-              <option value="usd" key="usd">
+              {/* <option value="usd" key="usd"> 
                 USD
-              </option>
+              </option>*/}
               <option value="cop" key="cop">
                 COP
               </option>
@@ -46,11 +46,11 @@ const OptionsBar = ({tittleBar}) => {
               Método de pago
             </label>
             <select className="Buy-selector" id="pay" name="pay" form="payForm">
-              <option value="any" key="any">
+              {/* <option value="any" key="any">
                 Cualquiera
-              </option>
+              </option> */}
               <option value="cop" key="cop">
-                COP
+                Consignaci&oacute;n
               </option>
             </select>
           </div>
