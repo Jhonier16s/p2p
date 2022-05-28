@@ -9,8 +9,9 @@ import History from "./components/Views/History";
 import SellSps from "./components/Views/SellSps";
 import BuyOffers from "./components/Views/BuyOffers";
 import SellOffers from "./components/Views/SellOffers";
-import BuyConfirm from "./components/Views/BuyConfirm";
-import SellConfirm from "./components/Views/SellConfirm";
+// import BuyConfirm from "./components/Views/BuyConfirm";
+// import SellConfirm from "./components/Views/SellConfirm";
+import BuySellConfirm from "./components/Views/BuySellConfirm";
 function App() {
 
    const URL = "https://sps-p2p.herokuapp.com/trades.json";
@@ -43,9 +44,8 @@ function App() {
           <Route path="/SellSps" element={<SellSps />} />
           <Route path="/BuyOffers" element={<BuyOffers />} />
           <Route path="/SellOffers" element={<SellOffers />} />
-          <Route path={"/BuyConfirm"} element={<BuyConfirm/>} />
-          <Route path={"/BuyConfirm/:id"} element={<BuyConfirm/>} />
-          <Route path={"/SellConfirm/:id"} element={<SellConfirm/>} />
+          <Route path={"/BuyConfirm/:id/:seller/:swBuyOrSell"} element={<BuySellConfirm />} />
+          <Route path={"/SellConfirm/:id/:seller/:swBuyOrSell"} element={<BuySellConfirm />} />
          
         </Routes>
       </BrowserRouter>

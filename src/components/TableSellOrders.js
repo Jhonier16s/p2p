@@ -11,7 +11,7 @@ const Table = ({id, coin}) => {
         if(response[1][i] != 0) {
           result[i] = {}
           result[i]["id"] = parseInt(response[3][i])
-          result[i]["typetrade"] = parseInt(response[4][i]) ? "Sell" : "Buy"
+          result[i]["typetrade"] = parseInt(response[0][i]) ? "Sell" : "Buy"
           result[i]["coin"] = "SPS"
           result[i]["city"] = "dwad"
           result[i]["country_id"] = 1
@@ -23,9 +23,10 @@ const Table = ({id, coin}) => {
           result[i]["status_trade"] = window.web3.utils.toAscii(response[2][i])
           result[i]["created_at"] = "2022-04-28T17:38:52.347Z"
           result[i]["updated_at"] = "2022-04-28T17:38:52.347Z"
-          result[i]["pricetrade"] = response[4][i]/1000000000000000000
+          result[i]["pricetrade"] = 0
           result[i]["ammount"] = response[1][i]/1000000000000000000
-          result[i]["seller"] = response[0][i]
+          //result[i]["buyer"] = response[0][i]
+          result[i]["buyOrSell"] = response[0][i]
         }
       }
       return result 
@@ -86,7 +87,7 @@ const Table = ({id, coin}) => {
     const getHistory = async () => {
       const p2pContract = await new window.web3.eth.Contract(p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
       return await p2pContract.methods
-        .getBuyerTransaction(window.ethereum.selectedAddress, 10)
+        .getSellerOrdersToApproveOrActive(window.ethereum.selectedAddress, 1, 10)
         .call()
         .then(result => {
           console.log(result);
@@ -106,11 +107,11 @@ const Table = ({id, coin}) => {
         <table className="Table-Main">
           <thead className="Table-Head">
             <tr key="1">
-              <th>Fecha y hora</th>
+              {/* <th>Fecha y hora</th> */}
               <th>ID de negocio</th>
               <th>Tipo</th>
-              <th>Billetera</th>
-              <th>Cantidad</th>
+              {/* <th>Comprador</th> */}
+              <th>Activo</th>
               <th>Estado</th>
               <th>Acción</th>
             </tr>
@@ -118,17 +119,16 @@ const Table = ({id, coin}) => {
           {history.map((history, index) => {
             return (
               <tr key={index}>
-                <td>{history.created_at}</td>
+                {/* <td>{history.created_at}</td> */}
                 <td>{history.id}</td>
                 <td>{history.typetrade}</td>
-                <td>{history.coin}</td>
+                {/* <td>{history.buyer.substring(0, 5)+"..."+history.buyer.slice(-5)}</td> */}
                 <td>{history.ammount} SPS </td>
                 <td>{history.status_trade}</td>
-                <td> 
-                  {history.typetrade == "Sell" && history.status_trade == "In Progress\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00" && <button onClick={() => EscrowAction(history.seller, history.id)}  className="button">Solicitar Intervención</button>}
-                  {/* {(history.typetrade == "Sell" && history.status_trade == "In Progress\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00") && <button onClick={() => fundRelease(history.seller, history.id)} className="button">Aprobar</button> }  */}
-                  {(history.typetrade == "Buy" && history.status_trade == "In Progress\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00") && <button onClick={() => fundRelease(history.seller, history.id)} className="button">Aprobar</button>} &nbsp;
-                  {(history.typetrade == "Buy" && history.status_trade == "In Progress\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00") && <button onClick={() => EscrowAction(history.seller, history.id)} className="button">Solicitar Intervención</button>}
+                <td>
+                  {history.buyOrSell == 1 ? <button onClick={() => fundRelease(window.ethereum.selectedAddress, history.id)} className="button">Aprobar</button>
+                  : "" } &nbsp;
+                  <button onClick={() => EscrowAction(window.ethereum.selectedAddress, history.id)} className="button">Solicitar Intervención</button>
                 </td>
               </tr>
             );

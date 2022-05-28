@@ -1,12 +1,12 @@
 import react, { useEffect, useState } from "react";
 import "../../styles/BuyConfirm.css";
-import BuyConfirmCard from "../BuyConfirmCard";
+import BuySellConfirmCard from "../BuySellConfirmCard";
 import arrow from "../../assets/right-arrow.png";
 import { useParams } from "react-router-dom";
 
-const BuyConfirm = () => {
+const BuySellConfirm = () => {
   /*  console.log(useParams()); */
-  const { id, seller } = useParams();
+  const { id, seller, swBuyOrSell } = useParams();
   /* console.log(id); */
 
   const [getId, setId] = useState(id);
@@ -65,12 +65,13 @@ const BuyConfirm = () => {
   //   setId(trades.id);
   //   console.log(trades);
   // };
+  debugger
 
   return (
     <>
       <div className="Buy-Confirm-Container">
         <div className="Buy-Confirm-CARD-Container">
-          <BuyConfirmCard back_to="/BuySps" complete="Confirmar transacción"idTrade={id} date={new Date().toString()} buy_sell={"Comprar"} one_pridetrade={getTrade.pricetrade} trade_extra_info_payment={getTrade.extra_info_payment} seller={sellerAddress} trade={getTrade} />
+          <BuySellConfirmCard back_to={swBuyOrSell==0?"/BuySps":"/SellSps"} complete="Confirmar transacción"idTrade={id} date={new Date().toString()} buy_sell={"Comprar"} one_pridetrade={getTrade.pricetrade} trade_extra_info_payment={getTrade.extra_info_payment} seller={sellerAddress} trade={getTrade} swBuyOrSell={swBuyOrSell} />
         </div>
         <div className="Buy-Confirm-Steps-Container">
           <h3>Pasos para que se apruebe la compra</h3>
@@ -121,4 +122,4 @@ const BuyConfirm = () => {
   );
 };
 
-export default BuyConfirm;
+export default BuySellConfirm;

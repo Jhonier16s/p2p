@@ -3,7 +3,7 @@ import "../styles/BuyConfirmCard.css";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-const BuyConfirmCard = ({
+const BuySellConfirmCard = ({
   buy_sell,
   date,
   idTrade,
@@ -13,6 +13,7 @@ const BuyConfirmCard = ({
   back_to,
   seller,
   trade,
+  swBuyOrSell,
 }) => {
   const { id } = useParams();
   /* console.log(id); */
@@ -80,7 +81,7 @@ const BuyConfirmCard = ({
             </div>
           </div>
         </div>
-        <div className="BuyConfirm-Transfer-Info-Container">
+        {swBuyOrSell == 0 && <div className="BuyConfirm-Transfer-Info-Container">
           <h2>
             Transfiere los fondos a la cuenta del vendedor que se porporciona a
             continación
@@ -99,11 +100,10 @@ const BuyConfirmCard = ({
               </div>
             </div>
           </div>
-        </div>
-        <div>
+        </div>}
+        {swBuyOrSell == 0 ? <div>
           <h2>
-            Haga click para transferir los fondoss, haga clic en el botón
-            “Tranferido, notificar al vendedor”.
+            Haga click en "Confirmar Transaccion" para notificar al vendedor.
           </h2>
           <div>
             <button onClick={handlePut} className="BuyConfirm-btn">
@@ -114,9 +114,22 @@ const BuyConfirmCard = ({
             </Link>
           </div>
         </div>
+      : <div>
+          <h2>
+            Haga click en "Confirmar Transacción" para transferir los fondos y notificar al comprador.
+          </h2>
+          <div>
+            <button onClick={handlePut} className="BuyConfirm-btn">
+              {complete}
+            </button>
+            <Link to={back_to}>
+              <button className="BuyConfirm-btn-cancel">Cancelar orden</button>
+            </Link>
+          </div>
+        </div>}
       </div>
     </>
   );
 };
 
-export default BuyConfirmCard;
+export default BuySellConfirmCard;

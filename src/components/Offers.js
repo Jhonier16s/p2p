@@ -2,9 +2,7 @@ import React from "react";
 import "../styles/Offers.css";
 import { Link } from "react-router-dom";
 
-const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id, pricetrade, buy_sell  }) => {
-  
-  
+const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id, pricetrade, buy_sell, seller, swBuyOrSell }) => {
 
   return (
     <>
@@ -24,7 +22,7 @@ const Offers = ({ option, typeTrade, coin, currency, infoPay, city, id, pricetra
             {/* <h3>ID Trade: {id}</h3> */}
             {/* <h3>{city}</h3> */}
             {/* <h3>$1K a 25k</h3> */}
-            <Link to={buy_sell+id}>
+            <Link to={buy_sell+id+'/'+seller+'/'+swBuyOrSell}>
               <button className="Offers-button">{option}</button>
             </Link>
           </div>
