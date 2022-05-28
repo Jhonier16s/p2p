@@ -73,7 +73,6 @@ contract SparkLifeP2p is Ownable {
 
     // Mapeo de vendedores
     address[] public sellers;
-    uint256 public numTransactions;
 
     //listado de agentes escrow y su respectivo fee
     mapping(address => SEscrower) public escrowers;
@@ -136,15 +135,39 @@ contract SparkLifeP2p is Ownable {
         sellers.push(seller);
     }
 
+    /*
+        Saber si una wallet address es seller
+    */
+    function isSeller(address seller) public view returns (bool) {
+        bool exists = false;
+        for (uint i = 0; i < sellers.length; i++) {
+            if(sellers[i] == seller)
+                exists = true;
+        }
+
+        return exists;
+    }
+
+     /*
+        Saber si una wallet address es Agente Escrower
+    */
+    function isAgentEscrower(address escrower) public view returns (bool) {
+        bool exists = false;
+        if(escrowers[escrower].active == 1)
+            exists = true;
+
+        return exists;
+    }
+
     modifier onlySeller() {
-        uint isSeller = 0;
+        uint _isSeller = 0;
         for (uint i = 0; i < sellers.length; i++) {
             if (sellers[i] == msg.sender) {
-                isSeller = 1;
+                _isSeller = 1;
                 break;
             }
         }
-        require(isSeller == 1);
+        require(_isSeller == 1);
         _;
     }
     
@@ -192,7 +215,6 @@ contract SparkLifeP2p is Ownable {
         // Notas del comprador al vendedor
         currentEscrow.notes = notes;
         sellerEscrowDatabase[msg.sender].push(currentEscrow);
-        numTransactions++;
 
         emit EnewOffertSell(msg.sender);
         return true;
@@ -280,34 +302,114 @@ contract SparkLifeP2p is Ownable {
         emit EBought(buyer);
     }
 
-    /**
-        Historial de ventas
-    
-    function sellerEscrowHistory(address sellerAddress, uint startID, uint numToLoad) constant public returns (address[], address[],uint[], bytes32[]){
+    /*
+        Excecuted only by: Seller
+        Cancelar una orden
+        Solo se puede cancelar si no se ha ejecutado y si aun no tiene comprador
+    */
+    function cancelOrder(address sellerAddress, uint ID) public onlySeller {
 
-        uint length;
-        if (sellerEscrowDatabase[sellerAddress].length < numToLoad)
-            length = sellerEscrowDatabase[sellerAddress].length;
+        require(ID < sellerEscrowDatabase[sellerAddress].length && 
+            sellerEscrowDatabase[sellerAddress][ID].release_approval == false &&
+            sellerEscrowDatabase[sellerAddress][ID].refund_approval == false &&
+            msg.sender == sellerAddress &&
+            sellerEscrowDatabase[sellerAddress][ID].buyer == address(0)
+        );
         
+        // Cambiar de estado a reembolso
+        sellerEscrowDatabase[sellerAddress][ID].refund_approval = true;
+        sellerEscrowDatabase[sellerAddress][ID].buyer = sellerAddress;
+
+        // Si el vendedor depositó SPS, devolverlos
+        if(sellerEscrowDatabase[sellerAddress][ID].type_escrow == 1) {
+            // Reembolsar el total de la cantidad enviada
+            uint amount = sellerEscrowDatabase[sellerAddress][ID].weiAmmount;
+            Funds[sellerAddress] += amount;
+        }
+
+        // emit EBought(sellerAddress);
+    }
+
+    /**
+        Historial de ventas esperando por aprobacion
+        action = 1 approve, 0 = actives
+        La accion es para saber que tipo de registros se va a devolver
+         - 1 Registros para aprobar (que tienen un comprador)
+         - 0 Registros activos listos para aplicar a la oferta
+         - 2 History
+    **/
+    function getSellerOrdersToApproveOrActive(address sellerAddress, uint action, uint numToLoad) constant public returns (uint[], uint[], bytes32[], uint[]){
+
+        address _seller = sellerAddress;
+        uint _startID = 0;
+        uint loadingTransactionLength = 0;
+        uint length;
+        if (sellerEscrowDatabase[_seller].length < numToLoad)
+            length = sellerEscrowDatabase[_seller].length;        
         else 
             length = numToLoad;
         
-        address[] memory buyers = new address[](length);
-        address[] memory escrow_agents = new address[](length);
+        // address[] memory buyers = new address[](length);
+        // address[] memory escrow_agents = new address[](length);
         uint[] memory amounts = new uint[](length);
+        uint[] memory escrow_types = new uint[](length);
         bytes32[] memory statuses = new bytes32[](length);
+        uint[] memory ids = new uint[](numToLoad);
         
-        for (uint i = 0; i < length; i++)
-        {
-
-            buyers[i] = (sellerEscrowDatabase[sellerAddress][startID + i].buyer);
-            escrow_agents[i] = (sellerEscrowDatabase[sellerAddress][startID + i].escrow_agent);
-            amounts[i] = (sellerEscrowDatabase[sellerAddress][startID + i].amount);
-            statuses[i] = checkStatus(sellerAddress, startID + i);
+        for (uint i = 0; i < length; i++) {
+            if (action == 1) {                
+                if (
+                    sellerEscrowDatabase[_seller][_startID + i].release_approval == false &&
+                    sellerEscrowDatabase[_seller][_startID + i].refund_approval == false && 
+                    sellerEscrowDatabase[_seller][_startID + i].buyer != address(0)
+                ) {
+                    escrow_types[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].type_escrow);
+                    amounts[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].amount);
+                    statuses[loadingTransactionLength] = checkStatus(_seller, sellerEscrowDatabase[_seller][_startID + i].escrowId);
+                    ids[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].escrowId);
+                    loadingTransactionLength++;
+                } else {
+                    if(sellerEscrowDatabase[_seller].length > length)
+                        length++;
+                }
+            } else if (action == 0) {
+                if (
+                    sellerEscrowDatabase[_seller][_startID + i].release_approval == false &&
+                    sellerEscrowDatabase[_seller][_startID + i].refund_approval == false && 
+                    sellerEscrowDatabase[_seller][_startID + i].buyer == address(0)
+                ) {
+                    escrow_types[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].type_escrow);
+                    amounts[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].amount);
+                    statuses[loadingTransactionLength] = checkStatus(_seller, sellerEscrowDatabase[_seller][_startID + i].escrowId);
+                    ids[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].escrowId);
+                    loadingTransactionLength++;
+                } else {
+                    if(sellerEscrowDatabase[_seller].length > length)
+                        length++;
+                }
+            } else if (action == 2) {
+                if (
+                    (sellerEscrowDatabase[_seller][_startID + i].release_approval == true ||
+                    sellerEscrowDatabase[_seller][_startID + i].refund_approval == true) && 
+                    sellerEscrowDatabase[_seller][_startID + i].buyer != address(0)
+                ) {
+                    escrow_types[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].type_escrow);
+                    amounts[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].amount);
+                    statuses[loadingTransactionLength] = checkStatus(_seller, sellerEscrowDatabase[_seller][_startID + i].escrowId);
+                    ids[loadingTransactionLength] = (sellerEscrowDatabase[_seller][_startID + i].escrowId);
+                    loadingTransactionLength++;
+                } else {
+                    if(sellerEscrowDatabase[_seller].length > length)
+                        length++;
+                }
+            } else {
+                // Si se envia un valor diferente de 1 o 0
+                break;
+            }
         }
         
-        return (buyers, escrow_agents, amounts, statuses);
-    }*/
+        return (escrow_types, amounts, statuses, ids);
+    }
 
     /**
         Obtener el listado de ofertas (Compra y venta) que aun no tienen un comprador
@@ -330,11 +432,12 @@ contract SparkLifeP2p is Ownable {
             for(uint k = 0; k < sellerEscrowDatabase[sellers[i]].length; k++) {
                 // validar el estado de la transaccion (ordenes abiertas)
                 if(
-                  sellerEscrowDatabase[sellers[i]][k].type_escrow == action
-                  && loadingTransactionLength < numToLoad
+                    loadingTransactionLength < numToLoad &&
+                    sellerEscrowDatabase[sellers[i]][k].buyer == address(0) &&
+                    sellerEscrowDatabase[sellers[i]][k].type_escrow == action
                 ) {
                     _sellers[loadingTransactionLength] = (sellers[i]);
-                    escrow_agents[loadingTransactionLength] = (sellerEscrowDatabase[sellers[k]][k].escrow_agent);
+                    escrow_agents[loadingTransactionLength] = (sellerEscrowDatabase[sellers[i]][k].escrow_agent);
                     amounts[loadingTransactionLength] = (sellerEscrowDatabase[sellers[i]][k].amount);
                     statuses[loadingTransactionLength] = checkStatus(sellers[i], sellerEscrowDatabase[sellers[i]][k].escrowId);
                     ids[loadingTransactionLength] = (sellerEscrowDatabase[sellers[i]][k].escrowId);
@@ -345,35 +448,71 @@ contract SparkLifeP2p is Ownable {
         
         return (_sellers, escrow_agents, amounts, statuses, ids);
     }
-    
-    /*
-        Historial de transacciones
-    */
-    function buyerEscrowHistory(uint maxToLoad) constant public returns (address[], uint[], bytes32[], uint[], uint256[]){
-       
-        uint length;
-        if (buyerEscrowDatabase[msg.sender].length < maxToLoad)
-            length = buyerEscrowDatabase[msg.sender].length;        
-        else 
-            length = maxToLoad;
-        
-        address[] memory _sellers = new address[](length);
-        uint[] memory amounts = new uint[](length);
-        bytes32[] memory statuses = new bytes32[](length);
-        uint[] memory ids = new uint[](length);
-        uint256[] memory spsCopPrices = new uint256[](length);
-        
-        for (uint i = 0; i < length; i++) {
-            uint256 _escrowId = buyerEscrowDatabase[msg.sender][i].escrowId;
-            address _seller = buyerEscrowDatabase[msg.sender][i].seller;
-            
-            _sellers[i] = (_seller);
-            amounts[i] = (sellerEscrowDatabase[_seller][_escrowId].amount);
-            statuses[i] = checkStatus(_seller, _escrowId);
-            ids[i] = (_escrowId);
-            spsCopPrices[i] = (sellerEscrowDatabase[_seller][_escrowId].spsCopPrice);
+
+    // Obtener especificamente una transaccion de venta o compra
+    function getSpecificSellOrBuyTransaction(address sellerAddress, uint ID) constant public returns (address, address, uint256, bytes32, uint, bytes32, uint256) {
+        bytes32 status;
+        SEscrow memory sellerTransaction;
+        sellerTransaction = sellerEscrowDatabase[sellerAddress][ID];
+        status = checkStatus(sellerAddress, ID);
+        return (sellerTransaction.seller, sellerTransaction.escrow_agent, sellerTransaction.amount, status, sellerTransaction.escrowId, sellerTransaction.notes, sellerTransaction.spsCopPrice);
+    }
+
+    // Obtener especificamente una transaccion de venta o compra
+    function getEscrowerTransactions(address escrowerAddress) constant public returns (address[], address[], uint[]) {
+        STransaction[] memory escrowerPendings;
+        escrowerPendings = escrowDatabase[escrowerAddress];
+
+        address[] memory _sellers = new address[](escrowerPendings.length);
+        address[] memory _buyers = new address[](escrowerPendings.length);
+        uint[] memory ids = new uint[](escrowerPendings.length);
+        uint indexTransaction = 0;
+
+        for(uint j = 0; j < escrowerPendings.length; j++) {
+            if (
+                sellerEscrowDatabase[escrowerPendings[j].seller][escrowerPendings[j].escrowId].release_approval == false &&
+                sellerEscrowDatabase[escrowerPendings[j].seller][escrowerPendings[j].escrowId].refund_approval == false &&
+                sellerEscrowDatabase[escrowerPendings[j].seller][escrowerPendings[j].escrowId].escrow_intervention == true
+            ) {
+                _sellers[indexTransaction] = (escrowerPendings[j].seller);
+                _buyers[indexTransaction] = (escrowerPendings[j].buyer);
+                ids[indexTransaction] = j;
+                indexTransaction++;
+            }
         }
-        return (_sellers, amounts, statuses, ids, spsCopPrices);
+
+        return (_sellers, _buyers, ids);
+    }
+
+    /*
+        Obtener el historial de compras de una Wallet
+    */
+    function getBuyerTransaction(address buyerAddress, uint maxLoad) constant public returns (address[], uint[], bytes32[], uint[], uint[]) {
+        
+        address[] memory _sellers = new address[](maxLoad);
+        uint[] memory amounts = new uint[](maxLoad);
+        bytes32[] memory statuses = new bytes32[](maxLoad);
+        uint[] memory ids = new uint[](maxLoad);
+        uint[] memory type_escrow = new uint[](maxLoad);
+        // address[] memory escrow_agents = new address[](maxLoad);
+        address buyer = buyerAddress;
+        
+        for(uint j = 0; j < buyerEscrowDatabase[buyer].length; j++) {
+            if(j < maxLoad){
+                uint256 _escrowId = buyerEscrowDatabase[buyer][j].escrowId;
+                address _seller = buyerEscrowDatabase[buyer][j].seller;
+                
+                _sellers[j] = (_seller);
+                // escrow_agents[j] = (sellerEscrowDatabase[_seller][_escrowId].escrow_agent);
+                amounts[j] = (sellerEscrowDatabase[_seller][_escrowId].amount);
+                statuses[j] = checkStatus(_seller, _escrowId);
+                ids[j] = (_escrowId);
+                type_escrow[j] = (sellerEscrowDatabase[_seller][_escrowId].type_escrow);
+            } else {
+                break;
+            }
+        }
+        return (_sellers, amounts, statuses, ids, type_escrow);
     }
 
     /**
@@ -388,30 +527,18 @@ contract SparkLifeP2p is Ownable {
         Si es llamada por el buyer, se debe de enviar el id del buyerDB  y no del seller, es porque se debe de llamar desde el listado de buyer que tiene IDs diferentes a los de seller
         si es llamada por el seller, el id es el id del escrow del sellerDB
     */
-    function EscrowEscalation(uint switcher, uint buyerID) public {
+    function EscrowEscalation(address sellerAddress, uint escrowId) public {
         // Para activar EscrowEscalation
         //1) El vendedor no ha aprobado la liberacion de los fondos.
         //2) El comprador no ha enviado o consignado el valor de la compra.
         //3) EscrowEscalation es activo por primera vez
 
-        // No importa si es el vendedor o comprador quien activa la escalacion
-        address sellerAddress;
-        uint256 ID;
-        if (switcher == 1) { // Seller
-            sellerAddress = msg.sender;
-            ID = buyerID;
-        } else if (switcher == 0) { // Buyer
-            // Buscamos el Seller en la transaccion del buyer (en tal caso)
-            sellerAddress = buyerEscrowDatabase[msg.sender][buyerID].seller;
-            ID = buyerEscrowDatabase[msg.sender][buyerID].escrowId;
-        }
-
-        require(sellerEscrowDatabase[sellerAddress][ID].escrow_intervention == false  &&
-            sellerEscrowDatabase[sellerAddress][ID].release_approval == false &&
-            sellerEscrowDatabase[sellerAddress][ID].refund_approval == false);
+        require(sellerEscrowDatabase[sellerAddress][escrowId].escrow_intervention == false  &&
+            sellerEscrowDatabase[sellerAddress][escrowId].release_approval == false &&
+            sellerEscrowDatabase[sellerAddress][escrowId].refund_approval == false);
 
         //Activate the ability for Escrow Agent to intervent in this transaction
-        sellerEscrowDatabase[sellerAddress][ID].escrow_intervention = true;
+        sellerEscrowDatabase[sellerAddress][escrowId].escrow_intervention = true;
         
     }
 
