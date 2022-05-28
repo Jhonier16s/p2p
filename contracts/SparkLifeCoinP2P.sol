@@ -613,14 +613,14 @@ contract SparkLifeP2p is Ownable {
         bytes32 status = "";
 
         if (sellerEscrowDatabase[sellerAddress][nounce].release_approval){
-            status = "Complete";
+            status = "Completado";
         } else if (sellerEscrowDatabase[sellerAddress][nounce].refund_approval){
-            status = "Refunded";
+            status = "Reembolsado";
         } else if (sellerEscrowDatabase[sellerAddress][nounce].escrow_intervention){
-            status = "Pending Escrow Decision";
+            status = "Elevado a Árbitro";
         } else
         {
-            status = "In Progress";
+            status = "En Progreso";
         }
 
         return (status);

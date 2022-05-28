@@ -57,7 +57,7 @@ const Table = ({id, coin}) => {
       })
       .then(receipt => {
         console.log(receipt);
-        window.alert("La transacción se ha elevado a un Árbitro para que se tome una desición"); 
+        window.alert("La transacción se ha completado correctamente"); 
       })
   }
   async function EscrowAction(seller, id) {
