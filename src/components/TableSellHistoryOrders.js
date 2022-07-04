@@ -1,6 +1,10 @@
 import React,{useState,useEffect} from "react";
 import web3Utils from '../Utils/web-utils'
 import "../styles/Table.css";
+import { BallTriangle } from  'react-loader-spinner'
+
+var isLoading = true
+var notRecords = false
 
 const Table = ({id, coin}) => {
   
@@ -47,6 +51,9 @@ const Table = ({id, coin}) => {
         .call()
         .then(result => {
           console.log(result);
+          isLoading = false
+          if(result[0].length == 0)
+            notRecords = true
           setHistory(parseList(result))
         })
         .catch(err => {
@@ -59,6 +66,14 @@ const Table = ({id, coin}) => {
   
   return (
     <>
+      {isLoading===true?
+      <div style={{left:"45%", position:"absolute"}}>
+      <BallTriangle
+        heigth="100"
+        width="100"
+        color="grey"
+        ariaLabel="loading-indicator"
+      /></div>:""}
       <div className="Table-container">
         <table className="Table-Main">
           <thead className="Table-Head">
@@ -84,6 +99,7 @@ const Table = ({id, coin}) => {
               </tr>
             );
           })}
+          {notRecords?<tr><td colSpan={4}><h1 style={{textAlign:"center"}}><br/>Sin Registros</h1></td></tr>:""}
         </table>
       </div>
     </>

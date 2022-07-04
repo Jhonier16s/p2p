@@ -1,9 +1,14 @@
 import React,{useState,useEffect} from "react";
 import web3Utils from '../Utils/web-utils'
 import "../styles/Table.css";
+import { Bars, BallTriangle } from  'react-loader-spinner'
+
+var isLoading = true
+var notRecords = false
 
 const Table = ({id, coin}) => {
-  
+
+  const [isLoadingDesicion, setLoadingDesicion] = useState(false)
   const parseList = (response) => {
     try {
       let result = []
@@ -24,8 +29,10 @@ const Table = ({id, coin}) => {
     }
   }
   const [history, setHistory] = useState([]);
-  async function escrowDecision(action, id) {
-    const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
+  async function escrowDecision(action, id, e) {
+    //e.preventDefault();
+    setLoadingDesicion(true)
+    const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, web3Utils.p2pContractAddress)
     return await p2pContract.methods
       .escrowDecision(
         id,
@@ -39,22 +46,27 @@ const Table = ({id, coin}) => {
         console.log("Pending transaction... please wait")
       })
       .on('error', (err) => {
-        console.log(err);
+        console.log(err)
+        setLoadingDesicion(false)
       })
       .then(receipt => {
-        console.log(receipt);
+        console.log(receipt)
+        setLoadingDesicion(false)
         window.alert("La transacción se ha elevado a un Árbitro para que se tome una desición"); 
       })
   }
 
   useEffect(() => {
     const getHistory = async () => {
-      const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
+      const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, web3Utils.p2pContractAddress);
       return await p2pContract.methods
         .getEscrowerTransactions(window.ethereum.selectedAddress)
         .call()
         .then(result => {
           console.log(result);
+          isLoading = false
+          if(result[0].length == 0)
+            notRecords = true
           setHistory(parseList(result));
         })
         .catch(err => {
@@ -67,6 +79,14 @@ const Table = ({id, coin}) => {
   
   return (
     <>
+      {isLoading===true?
+      <div style={{left:"45%", position:"absolute"}}>
+      <BallTriangle
+        heigth="100"
+        width="100"
+        color="grey"
+        ariaLabel="loading-indicator"
+      /></div>:""}
       <div className="Table-container">
         <table className="Table-Main">
           <thead className="Table-Head">
@@ -85,12 +105,21 @@ const Table = ({id, coin}) => {
                 <td>{history.buyer.substring(0, 5)+"..."+history.buyer.slice(-5)}</td>
                 <td>{history.seller.substring(0, 5)+"..."+history.seller.slice(-5)}</td>
                 <td>
-                  <button onClick={() => escrowDecision(0, history.id)} className="button">Reembolso</button>&nbsp;
-                  <button onClick={() => escrowDecision(1, history.id)} className="button">Aprobar</button>
+                  {!isLoadingDesicion?
+                    <button onClick={() => escrowDecision(0, history.id)} className="button">Reembolso</button>
+                  :""}
+                  &nbsp;
+                  {!isLoadingDesicion?
+                    <button onClick={() => escrowDecision(1, history.id)} className="button">Aprobar</button>
+                  :""}
+                  {isLoadingDesicion===true?
+                    <Bars heigth="60" width="60" color="white" ariaLabel="loading-indicator" />
+                    :""}
                 </td>
               </tr>
             );
           })}
+          {notRecords?<tr><td colSpan={4}><h1 style={{textAlign:"center"}}><br/>Sin Registros</h1></td></tr>:""}
         </table>
       </div>
     </>

@@ -65,22 +65,22 @@ const BuySellConfirm = () => {
   //   setId(trades.id);
   //   console.log(trades);
   // };
-  debugger
 
   return (
     <>
       <div className="Buy-Confirm-Container">
         <div className="Buy-Confirm-CARD-Container">
-          <BuySellConfirmCard back_to={swBuyOrSell==0?"/BuySps":"/SellSps"} complete="Confirmar transacción"idTrade={id} date={new Date().toString()} buy_sell={"Comprar"} one_pridetrade={getTrade.pricetrade} trade_extra_info_payment={getTrade.extra_info_payment} seller={sellerAddress} trade={getTrade} swBuyOrSell={swBuyOrSell} />
+          <BuySellConfirmCard back_to={swBuyOrSell==0?"/BuySps":"/SellSps"} complete="Confirmar transacción"idTrade={id} date={new Date().toString()} buy_sell={swBuyOrSell==0?"Comprar":"Vender"} one_pridetrade={getTrade.pricetrade} trade_extra_info_payment={getTrade.extra_info_payment} seller={sellerAddress} trade={getTrade} swBuyOrSell={swBuyOrSell} />
         </div>
         <div className="Buy-Confirm-Steps-Container">
-          <h3>Pasos para que se apruebe la compra</h3>
+          <h3>Pasos para que se apruebe la {swBuyOrSell==0?"compra":"venta"}</h3>
           <div className="Buy-Confirm-Steps">
             <h5 className="Buy-Confirm-Steps-Text">
-              1 Transferir pago al vendedor
+              1. Transferir {swBuyOrSell==0?"a la cuenta del vendedor el total de la transacción":"a la cuenta del comprador el total de SPS que quieres vender"}
             </h5>
-            <h5 className="Buy-Confirm-Steps-Text">2 Se intercambia el SPS</h5>
-            <h5 className="Buy-Confirm-Steps-Text">3 Completado</h5>
+            <h5 className="Buy-Confirm-Steps-Text">2. Se notifiva al {swBuyOrSell==0?"vendedor que quieres comprar sus SPS y obtienes sus datos bancanrios para realizar el deposito correspondiente":"comprador que quieres venderle tus SPS y obtiene tus datos para que proceda a realizar el deposito correcpondiente"}</h5>
+            <h5 className="Buy-Confirm-Steps-Text">3. El {swBuyOrSell==0?"vendedor recibe la notificacion y procede a verificar y liberar los SPS":"comprador recibe la notificacion y procede a realizar el deposito"}</h5>
+            <h5 className="Buy-Confirm-Steps-Text">4. Una vez {swBuyOrSell==0?"el vendedor reciba tu pago procederá a liberar los fondos a tu Billetera":"verifiques el pago procedes a liberar los SPS al comprador"}</h5>
           </div>
           <div className="Buy-Confirm-User-Container">
             <div className="Buy-Confirm-User">

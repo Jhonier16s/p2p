@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import OptionsBar from "../OptionsBar";
 import Offers from "../Offers";
 import web3Utils from '../../Utils/web-utils'
-// import { Audio } from  'react-loader-spinner'
+import { BallTriangle } from  'react-loader-spinner'
 
+
+var isLoading = true
+var notRecords = false
 const SellSps = () => {
+  
   const [buyTrades, setBuyTrades] = useState([]);
-  var isLoading = true
   // Listado tipo sell typetrade=1 - para usuario final comprar
   const parseList = (response) => {
     let result = []
@@ -37,14 +40,16 @@ const SellSps = () => {
   
   useEffect(() => {
     const getBuyTrades = async () => {
-      const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
+      const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, web3Utils.p2pContractAddress);
         return await p2pContract.methods
           .marketBuyOrSellOrders(5, 0)
           .call()
           .then(result => {
-            console.log(result);
-            setBuyTrades(parseList(result));
+            console.log(result)
             isLoading = false
+            if(result[0].length == 0)
+              notRecords = true
+            setBuyTrades(parseList(result))
           })
           .catch(err => {
             console.log(err);
@@ -57,7 +62,15 @@ const SellSps = () => {
   return (
     <>
       <OptionsBar tittleBar="Vender Sparklife" />
-      
+      {isLoading===true?
+      <div style={{left:"45%", position:"absolute"}}>
+      <BallTriangle
+        heigth="100"
+        width="100"
+        color="grey"
+        ariaLabel="loading-indicator"
+      /></div>:""}
+      {notRecords?<h1 style={{color:"white", textAlign:"center"}}>Sin Registros</h1>:""}
       {buyTrades.map((trade, index) => {
         return (
           <Offers

@@ -3,6 +3,7 @@ import "../styles/BuyConfirmCard.css";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import web3Utils from '../Utils/web-utils'
+import { Bars } from  'react-loader-spinner'
 
 const BuySellConfirmCard = ({
   buy_sell,
@@ -16,17 +17,22 @@ const BuySellConfirmCard = ({
   trade,
   swBuyOrSell,
 }) => {
+
   const { id } = useParams();
   /* console.log(id); */
 
   const [getId, setId] = useState(id);
   const [getTrade, setTrade] = useState({});
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     setTrade(trade);
   }, []);
 
-  const handlePut = async () => {
+  const handlePut = async (e) => {
+    e.defaultPrevented = true
+    e.target.disabled = true
+    setLoading(true)
     const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
     return await p2pContract.methods
       .offertEscrow(
@@ -41,10 +47,14 @@ const BuySellConfirmCard = ({
         console.log("Pending transaction... please wait")
       })
       .on('error', (err) => {
-        console.log(err);
+        console.log(err)
+        setLoading(false)
+        e.target.disabled = false
       })
       .then(receipt => {
-        console.log(receipt);
+        console.log(receipt)
+        setLoading(false)
+        e.target.disabled = false
         window.alert("Se ha completado la transacción, puedes verificarla en tu historial de transacciones");
       })
   };
@@ -120,7 +130,10 @@ const BuySellConfirmCard = ({
           </h2>
           <div>
             <button onClick={handlePut} className="BuyConfirm-btn">
-              {complete}
+              {!isLoading?complete:''}
+              {isLoading===true?
+              <Bars heigth="60" width="60" color="white" ariaLabel="loading-indicator" />
+              :""}
             </button>
             <Link to={back_to}>
               <button className="BuyConfirm-btn-cancel">Cancelar orden</button>

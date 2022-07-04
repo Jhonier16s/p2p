@@ -4,7 +4,10 @@ import "../../styles/BuySps.css";
 import Offers from "../Offers";
 import OptionsBar from "../OptionsBar";
 import web3Utils from '../../Utils/web-utils'
+import { BallTriangle } from  'react-loader-spinner'
 
+var isLoading = true
+var notRecords = false
 const BuySps = () => {
   if (typeof window.ethereum !== 'undefined') {
     //console.log('MetaMask is installed!');
@@ -53,6 +56,9 @@ const BuySps = () => {
         .call()
         .then(result => {
           console.log(result);
+          isLoading = false
+          if(result[0].length == 0)
+            notRecords = true
           setBuyTrades(parseList(result));
         })
         .catch(err => {
@@ -68,6 +74,15 @@ const BuySps = () => {
   return (
     <>
       <OptionsBar tittleBar="Comprar Sparklife" />
+      {isLoading===true?
+      <div style={{left:"45%", position:"absolute"}}>
+      <BallTriangle
+        heigth="100"
+        width="100"
+        color="grey"
+        ariaLabel="loading-indicator"
+      /></div>:""}
+      {notRecords?<h1 style={{color:"white", textAlign:"center"}}>Sin Registros</h1>:""}
       {buyTrades.map((trade, index) => {
         return (
           <Offers

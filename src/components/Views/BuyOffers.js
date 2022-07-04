@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import web3Utils from '../../Utils/web-utils'
 import "../../styles/BuyOffers.css";
+import { Bars } from  'react-loader-spinner'
 
 const BuyOffers = () => {
   // const [typetrade, setTypeTrade] = useState("buy");
   const [coin, setCoin] = useState("");
+  const [isLoading, setLoading] = useState(false);
   {/*const [city, setCity] = useState("");
   const [country_id, setCountry] = useState("");
   const [currency, setCurrency] = useState("");
@@ -23,6 +25,7 @@ const [pricetrade, setPriceTrade] = useState("");*/}
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     // await window.ethereum.enable();
     const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
     return await p2pContract.methods
@@ -42,9 +45,11 @@ const [pricetrade, setPriceTrade] = useState("");*/}
       })
       .on('error', (err) => {
         console.log(err);
+        setLoading(false)
       })
       .then(receipt => {
         console.log(receipt);
+        setLoading(false)
         window.alert("Se ha completado la oferta, puedes verificarla en la pantalla de ofertas de compra"); 
         e.target.reset();
       })
@@ -116,8 +121,13 @@ const [pricetrade, setPriceTrade] = useState("");*/}
                 required
               />
             </div>
-
-            <button className="Form-btn">Crear oferta</button>
+            
+            {!isLoading?
+              <button className="Form-btn">Crear oferta</button>
+            :""}
+            {isLoading===true?
+              <Bars heigth="60" width="60" color="white" ariaLabel="loading-indicator" />
+              :""}
           </form>
         </div>
 
