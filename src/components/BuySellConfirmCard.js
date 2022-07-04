@@ -117,7 +117,10 @@ const BuySellConfirmCard = ({
           </h2>
           <div>
             <button onClick={handlePut} className="BuyConfirm-btn">
-              {complete}
+            {!isLoading?complete:''}
+              {isLoading===true?
+              <Bars heigth="60" width="60" color="white" ariaLabel="loading-indicator" />
+              :""}
             </button>
             <Link to={back_to}>
               <button className="BuyConfirm-btn-cancel">Cancelar orden</button>

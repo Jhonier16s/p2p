@@ -1,13 +1,13 @@
 import React,{useState,useEffect} from "react";
 import web3Utils from '../Utils/web-utils'
 import "../styles/Table.css";
-import { BallTriangle } from  'react-loader-spinner'
+import { Bars, BallTriangle } from  'react-loader-spinner'
 
 var isLoading = true
 var notRecords = false
 
 const Table = ({id, coin}) => {
-  
+  const [isLoadingCancel, setLoadingCancel] = useState(false)
   const parseList = (response) => {
     try {
       let result = []
@@ -44,6 +44,7 @@ const Table = ({id, coin}) => {
   const [history, setHistory] = useState([]);
   
   async function cancelOrder(seller, id) {
+    setLoadingCancel(true)
     const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
     return await p2pContract.methods
       .cancelOrder(
@@ -59,9 +60,11 @@ const Table = ({id, coin}) => {
       })
       .on('error', (err) => {
         console.log(err);
+        setLoadingCancel(false)
       })
       .then(receipt => {
         console.log(receipt);
+        setLoadingCancel(false)
         window.alert("La transacción se ha cancelado con exito"); 
       })
   }
@@ -120,7 +123,12 @@ const Table = ({id, coin}) => {
                 <td>{history.ammount} SPS </td>
                 <td>{history.status_trade}</td>
                 <td>
-                  <button onClick={() => cancelOrder(window.ethereum.selectedAddress, history.id)} className="button">Cancelar</button>
+                  {!isLoadingCancel?
+                    <button onClick={() => cancelOrder(window.ethereum.selectedAddress, history.id)} className="button">Cancelar</button>
+                  :""}
+                  {isLoadingCancel===true?
+                    <Bars heigth="60" width="60" color="grey" ariaLabel="loading-indicator" />
+                    :""}
                 </td>
               </tr>
             );

@@ -113,7 +113,7 @@ const Table = ({id, coin}) => {
                     <button onClick={() => escrowDecision(1, history.id)} className="button">Aprobar</button>
                   :""}
                   {isLoadingDesicion===true?
-                    <Bars heigth="60" width="60" color="white" ariaLabel="loading-indicator" />
+                    <Bars heigth="60" width="60" color="grey" ariaLabel="loading-indicator" />
                     :""}
                 </td>
               </tr>

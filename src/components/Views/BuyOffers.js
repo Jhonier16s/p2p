@@ -23,11 +23,8 @@ const [pricetrade, setPriceTrade] = useState("");*/}
   const [type, setType] = useState("0");
   const [copPrice, setCopPrice] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true)
-    // await window.ethereum.enable();
-    const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, '0x47fFb97892f263F7a37E74a0F5818A09a48296aF');
+  var newEscrow = async (e) => {
+    const p2pContract = await new window.web3.eth.Contract(web3Utils.p2pAbi, web3Utils.p2pContractAddress);
     return await p2pContract.methods
       .newEscrowSellOrBuy(
         window.web3.utils.toWei(weiAmmount, 'ether'),
@@ -53,6 +50,38 @@ const [pricetrade, setPriceTrade] = useState("");*/}
         window.alert("Se ha completado la oferta, puedes verificarla en la pantalla de ofertas de compra"); 
         e.target.reset();
       })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true)
+    // await window.ethereum.enable();
+    
+    const spsTokenContract = await new window.web3.eth.Contract(web3Utils.spsTokenAbi, web3Utils.spsTokenAddress);
+    await spsTokenContract.methods.allowance(window.ethereum.selectedAddress, web3Utils.p2pContractAddress)
+    .call()
+    .then(async ammount => {
+      if(ammount > 0 && (
+        window.web3.utils.toBN(window.web3.utils.toWei(ammount.toString(), 'ether'))
+          .cmp(window.web3.utils.toBN(window.web3.utils.toWei(weiAmmount, 'ether'))
+        ))
+      ) {
+        return newEscrow(e)
+      }
+      else {
+        if(window.confirm("Para poder hacer uso del token SPS primero deberá dar permiso de acceder a ellos. ¿Desea realizar la autorización ahora mismo?")) {
+          const spsTokenContract = await new window.web3.eth.Contract(web3Utils.spsTokenAbi, web3Utils.spsTokenAddress);
+          await spsTokenContract.methods.approve(web3Utils.p2pContractAddress, '1000000000000000000000000').send({from: window.ethereum.selectedAddress})
+          .then(() => {
+            alert("Saldo aprobado!!, publicando oferta...")
+            return newEscrow(e)
+          })
+        }
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
     
     /*fetch("https://sps-p2p.herokuapp.com/trades.json", {
       method: "POST",
