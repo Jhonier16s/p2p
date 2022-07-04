@@ -12,6 +12,7 @@ import SellOffers from "./components/Views/SellOffers";
 // import BuyConfirm from "./components/Views/BuyConfirm";
 // import SellConfirm from "./components/Views/SellConfirm";
 import BuySellConfirm from "./components/Views/BuySellConfirm";
+
 function App() {
 
    const URL = "https://sps-p2p.herokuapp.com/trades.json";
